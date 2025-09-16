@@ -11,7 +11,7 @@ pipeline {
     stage('Prepare') {
       steps {
         cleanWs()
-        // Use the same checkout Jenkins used to fetch the Jenkinsfile
+        // Use the same checkout Jenkins used to obtain the Jenkinsfile
         checkout scm
       }
     }
@@ -20,21 +20,21 @@ pipeline {
       steps {
         script {
           if (isUnix()) {
-            sh """#!/bin/bash
+            sh '''#!/bin/bash
 set -euo pipefail
 python3 -m venv venv
 . venv/bin/activate
 python -m pip install --upgrade pip
 pip install -r requirements.txt
-"""
+'''
           } else {
-            bat """
+            bat '''
 @echo off
 python -m venv venv
 call venv\\Scripts\\activate
 python -m pip install --upgrade pip
 pip install -r requirements.txt
-"""
+'''
           }
         }
       }
@@ -44,17 +44,17 @@ pip install -r requirements.txt
       steps {
         script {
           if (isUnix()) {
-            sh """#!/bin/bash
+            sh '''#!/bin/bash
 set -euo pipefail
 . venv/bin/activate
 pytest --maxfail=1 --disable-warnings -q
-"""
+'''
           } else {
-            bat """
+            bat '''
 @echo off
 call venv\\Scripts\\activate
 pytest --maxfail=1 --disable-warnings -q
-"""
+'''
           }
         }
       }
@@ -64,17 +64,17 @@ pytest --maxfail=1 --disable-warnings -q
       steps {
         script {
           if (isUnix()) {
-            sh """#!/bin/bash
+            sh '''#!/bin/bash
 . venv/bin/activate
 nohup python app.py > app.log 2>&1 & echo $! > app.pid || true
-"""
+'''
           } else {
-            bat """
+            bat '''
 @echo off
 call venv\\Scripts\\activate
 START /B python app.py > app.log 2>&1
 echo started > app.pid
-"""
+'''
           }
         }
       }
